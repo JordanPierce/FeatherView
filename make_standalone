@@ -1,0 +1,1 @@
+nuitka --standalone --recurse-on --plugin-enable=qt-plugins --python-version=3.6 FV.py
