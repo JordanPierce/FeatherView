@@ -1,8 +1,14 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, QtCore, QtGui
 from qlabelextended import QLabelExtended
 import os
 import json
+import sip
+import sys
+
+
+sip.setapi("QVariant", 2)
 
 
 class FeatherView(QtWidgets.QMainWindow):
@@ -79,3 +85,28 @@ class FeatherView(QtWidgets.QMainWindow):
             json.dump(self.controls, file, indent=2, sort_keys=True)
 
         closeEvent.accept()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("No file do open")
+    elif not os.path.isfile(sys.argv[1]):
+        print("Cannot open file")
+    else:
+        app = QtWidgets.QApplication(sys.argv)
+        QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, on=QtCore.Qt.Checked)
+
+        directory = os.path.dirname(__file__)
+        if os.name == 'nt':
+            sep = '\\'
+        else:
+            sep = '/'
+
+        name = sys.argv[1]
+        main_app = FeatherView(name, directory=directory, sep=sep)
+        app_icon = QtGui.QIcon()
+        app_icon.addFile(sep.join([directory, "feather.svg"]))
+        main_app.setWindowIcon(app_icon)
+        main_app.setWindowTitle(name[name.rfind(sep) + 1:])
+        main_app.show()
+        sys.exit(app.exec_())
